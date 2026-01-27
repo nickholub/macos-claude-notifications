@@ -8,9 +8,13 @@ Global Claude Code settings are at `~/.claude/settings.json`.
 
 ### Notification Hooks
 
-Notification script: `~/.claude/hooks/notify.sh` (uses `terminal-notifier`)
+Scripts in `~/.claude/hooks/`:
+- `notify.sh` - Shows notification using `terminal-notifier`, grouped by project name
+- `dismiss.sh` - Dismisses notifications for the current project group
 
 Configured hooks in `~/.claude/settings.json`:
-- **Stop** - triggers when Claude stops
-- **Notification (idle_prompt)** - triggers when Claude is idle at the prompt
-- **PostToolUse (AskUserQuestion)** - triggers when Claude asks for user input
+- **PreToolUse** - dismisses existing notifications for the project when Claude resumes work
+- **Stop** - shows notification when Claude stops
+- **PostToolUse (AskUserQuestion)** - shows notification when Claude asks for user input
+
+Notifications are grouped by project name (`-group "$project_name"`) so each project's notifications can be dismissed independently when Claude starts working again.
