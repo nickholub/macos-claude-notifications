@@ -2,22 +2,28 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Claude Code Configuration
+## Project Overview
 
-Global Claude Code settings are at `~/.claude/settings.json`.
+This repository contains Claude Code hook scripts for macOS notifications. The scripts in `claude/hooks/` are designed to be installed to `~/.claude/hooks/`.
 
-### Notification Hooks
+## Hook Scripts
 
-Scripts in `~/.claude/hooks/`:
-- `notify.sh` - Shows silent notification using `terminal-notifier`, grouped by project name
-- `dismiss.sh` - Dismisses notifications for the current project group
+### notify.sh
+Shows macOS notification using `terminal-notifier`:
+- **Title**: Project name (from `CLAUDE_PROJECT_DIR` or `cwd`)
+- **Subtitle**: Hook type (e.g., `Hook: [Stop]`)
+- **Message**: Task summary + compact JSON input
+- **Grouping**: Notifications grouped by project name for easy dismissal
 
-Configured hooks in `~/.claude/settings.json`:
-- **PreToolUse** - dismisses existing notifications for the project when Claude resumes work
+### dismiss.sh
+Dismisses notifications for the current project group.
+
+## Hook Configuration
+
+Configure in `~/.claude/settings.json`:
+- **PreToolUse** - dismisses existing notifications when Claude resumes work
 - **Stop** - shows notification when Claude stops
-- **PostToolUse (AskUserQuestion)** - shows notification when Claude asks for user input
-
-Notifications are grouped by project name (`-group "$project_name"`) so each project's notifications can be dismissed independently when Claude starts working again.
+- **PostToolUse (AskUserQuestion)** - shows notification when Claude asks for input
 
 ## Development
 
