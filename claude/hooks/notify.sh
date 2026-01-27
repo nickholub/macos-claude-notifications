@@ -3,18 +3,32 @@
 # Read JSON input from stdin
 input=$(cat)
 
+# Debug logging
+{
+    echo "=== $(date) ==="
+    echo "CLAUDE_PROJECT_DIR: ${CLAUDE_PROJECT_DIR:-<unset>}"
+    echo "PWD: $PWD"
+    echo "Input JSON:"
+    echo "$input" | jq .
+    echo ""
+} >> /tmp/claude-hook-debug.log
+
 # Check if this is already a hook-triggered stop (prevent infinite loops)
 stop_hook_active=$(echo "$input" | jq -r '.stop_hook_active // false')
 if [ "$stop_hook_active" = "true" ]; then
     exit 0
 fi
 
-# Get hook type
-hook_type=$(echo "$input" | jq -r '.hook_type // "Unknown"')
+# Get hook type (support both hook_event_name and hook_type field names)
+hook_type=$(echo "$input" | jq -r '.hook_event_name // .hook_type // "Unknown"')
 
-# Get project name from working directory
-cwd=$(echo "$input" | jq -r '.cwd // ""')
-project_name=$(basename "$cwd")
+# Get project name - prefer CLAUDE_PROJECT_DIR env var, fallback to cwd from input
+if [ -n "$CLAUDE_PROJECT_DIR" ]; then
+    project_name=$(basename "$CLAUDE_PROJECT_DIR")
+else
+    cwd=$(echo "$input" | jq -r '.cwd // ""')
+    project_name=$(basename "$cwd")
+fi
 if [ -z "$project_name" ]; then
     project_name="Claude Code"
 fi
@@ -34,6 +48,10 @@ fi
 
 # Display macOS notification (requires: brew install terminal-notifier)
 # Use project name as group for easy dismissal
-terminal-notifier -title "$project_name" -message "$summary [$hook_type]" -group "$project_name"
+# Compact JSON to maximize visible content
+input_compact=$(echo "$input" | jq -c .)
+terminal-notifier -title "$project_name" -subtitle "Hook: [$hook_type]" -message "$summary
+
+$input_compact" -group "$project_name"
 
 exit 0
