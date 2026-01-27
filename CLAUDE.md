@@ -9,7 +9,7 @@ Global Claude Code settings are at `~/.claude/settings.json`.
 ### Notification Hooks
 
 Scripts in `~/.claude/hooks/`:
-- `notify.sh` - Shows notification using `terminal-notifier`, grouped by project name
+- `notify.sh` - Shows silent notification using `terminal-notifier`, grouped by project name
 - `dismiss.sh` - Dismisses notifications for the current project group
 
 Configured hooks in `~/.claude/settings.json`:
