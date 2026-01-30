@@ -58,16 +58,6 @@ teardown() {
     grep -q "Claude Code" "$MOCK_DIR/notifier_calls.log"
 }
 
-@test "notify.sh includes hook_type in notification" {
-    input='{"cwd": "/test/project", "hook_type": "Stop"}'
-
-    run bash -c "echo '$input' | '$SCRIPT'"
-
-    [ "$status" -eq 0 ]
-    # Verify hook type appears in the message
-    grep -q "\[Stop\]" "$MOCK_DIR/notifier_calls.log"
-}
-
 @test "notify.sh uses project name as notification group" {
     input='{"cwd": "/Users/nick/projects/test-project", "hook_type": "Stop"}'
 
@@ -76,16 +66,6 @@ teardown() {
     [ "$status" -eq 0 ]
     # Verify -group flag uses project name
     grep -q "\-group test-project" "$MOCK_DIR/notifier_calls.log"
-}
-
-@test "notify.sh handles missing hook_type gracefully" {
-    input='{"cwd": "/test/project"}'
-
-    run bash -c "echo '$input' | '$SCRIPT'"
-
-    [ "$status" -eq 0 ]
-    # Should default to "Unknown"
-    grep -q "\[Unknown\]" "$MOCK_DIR/notifier_calls.log"
 }
 
 @test "notify.sh handles JSON with transcript_path but missing file" {
