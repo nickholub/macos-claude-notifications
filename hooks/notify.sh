@@ -14,9 +14,6 @@ if [ "$stop_hook_active" = "true" ]; then
     exit 0
 fi
 
-# Get hook type (support both hook_event_name and hook_type field names)
-hook_type=$(echo "$input" | jq -r '.hook_event_name // .hook_type // "Unknown"')
-
 # Get project name - prefer CLAUDE_PROJECT_DIR env var, fallback to cwd from input
 if [ -n "$CLAUDE_PROJECT_DIR" ]; then
     project_name=$(basename "$CLAUDE_PROJECT_DIR")
@@ -51,6 +48,6 @@ fi
 
 # Display macOS notification (requires: brew install terminal-notifier)
 # Use project name as group for easy dismissal
-terminal-notifier -title "$project_name" -subtitle "Hook: [$hook_type]" -message "$summary" -group "$project_name"
+terminal-notifier -title "$project_name" -message "$summary" -group "$project_name"
 
 exit 0

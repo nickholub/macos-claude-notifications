@@ -56,7 +56,6 @@ macOS notification hooks for [Claude Code](https://claude.ai/code). Get notified
 ### Notification Format
 
 - **Title**: Project name (from directory)
-- **Subtitle**: Hook type (e.g., `Hook: [Stop]`)
 - **Message**: Task summary or question text
 
 ### Hook Behavior
