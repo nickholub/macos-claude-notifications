@@ -29,20 +29,46 @@ macOS notification hooks for [Claude Code](https://claude.ai/code). Get notified
      "hooks": {
        "PreToolUse": [
          {
-           "matcher": "",
-           "hooks": ["/path/to/macos-claude-notifications/hooks/notifications_dismiss.sh"]
+           "hooks": [
+             {
+               "type": "command",
+               "command": "/path/to/macos-claude-notifications/hooks/notifications_dismiss.sh",
+               "async": true
+             }
+           ]
+         },
+         {
+           "matcher": "AskUserQuestion",
+           "hooks": [
+             {
+               "type": "command",
+               "command": "/path/to/macos-claude-notifications/hooks/notify.sh --log-json",
+               "async": true
+             }
+           ]
          }
        ],
        "Stop": [
          {
-           "matcher": "",
-           "hooks": ["/path/to/macos-claude-notifications/hooks/notify.sh"]
+           "hooks": [
+             {
+               "type": "command",
+               "command": "/path/to/macos-claude-notifications/hooks/notify.sh --log-json",
+               "async": true
+             }
+           ]
          }
        ],
-       "PostToolUse": [
+       "Notification": [
          {
-           "matcher": "AskUserQuestion",
-           "hooks": ["/path/to/macos-claude-notifications/hooks/notify.sh"]
+           "matcher": "permission_prompt",
+           "hooks": [
+             {
+               "type": "command",
+               "command": "/path/to/macos-claude-notifications/hooks/notify.sh --log-json",
+               "async": true
+             }
+           ]
          }
        ]
      }
@@ -62,6 +88,7 @@ macOS notification hooks for [Claude Code](https://claude.ai/code). Get notified
 
 - **Stop hook**: Shows notification with task summary extracted from transcript
 - **AskUserQuestion hook**: Shows notification with the actual question Claude is asking
+- **Notification hook**: Shows notification when Claude needs permission approval
 - **PreToolUse hook**: Dismisses previous notifications when Claude resumes work
 
 Notifications are grouped by project name, so dismissing one clears all notifications for that project.
