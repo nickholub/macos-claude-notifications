@@ -6,7 +6,7 @@ setup() {
     # Get the directory of the test file
     TEST_DIR="$(cd "$(dirname "$BATS_TEST_FILENAME")" && pwd)"
     PROJECT_ROOT="$(dirname "$TEST_DIR")"
-    SCRIPT="$PROJECT_ROOT/claude/hooks/notify.sh"
+    SCRIPT="$PROJECT_ROOT/hooks/notify.sh"
 
     # Create a mock terminal-notifier
     MOCK_DIR="$(mktemp -d)"

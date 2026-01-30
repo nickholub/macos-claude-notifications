@@ -1,12 +1,12 @@
 #!/usr/bin/env bats
 
-# Tests for dismiss.sh
+# Tests for notifications_dismiss.sh
 
 setup() {
     # Get the directory of the test file
     TEST_DIR="$(cd "$(dirname "$BATS_TEST_FILENAME")" && pwd)"
     PROJECT_ROOT="$(dirname "$TEST_DIR")"
-    SCRIPT="$PROJECT_ROOT/claude/hooks/dismiss.sh"
+    SCRIPT="$PROJECT_ROOT/hooks/notifications_dismiss.sh"
 
     # Create a mock terminal-notifier
     MOCK_DIR="$(mktemp -d)"
@@ -28,7 +28,7 @@ teardown() {
     rm -rf "$MOCK_DIR"
 }
 
-@test "dismiss.sh extracts project name from cwd" {
+@test "notifications_dismiss.sh extracts project name from cwd" {
     input='{"cwd": "/Users/nick/projects/my-project"}'
 
     run bash -c "echo '$input' | '$SCRIPT'"
@@ -38,7 +38,7 @@ teardown() {
     grep -q "\-remove my-project" "$MOCK_DIR/notifier_calls.log"
 }
 
-@test "dismiss.sh uses default project name when cwd is empty" {
+@test "notifications_dismiss.sh uses default project name when cwd is empty" {
     input='{"cwd": ""}'
 
     run bash -c "echo '$input' | '$SCRIPT'"
@@ -48,7 +48,7 @@ teardown() {
     grep -q "\-remove Claude Code" "$MOCK_DIR/notifier_calls.log"
 }
 
-@test "dismiss.sh uses default project name when cwd is missing" {
+@test "notifications_dismiss.sh uses default project name when cwd is missing" {
     input='{}'
 
     run bash -c "echo '$input' | '$SCRIPT'"
@@ -58,7 +58,7 @@ teardown() {
     grep -q "\-remove Claude Code" "$MOCK_DIR/notifier_calls.log"
 }
 
-@test "dismiss.sh handles project names with hyphens" {
+@test "notifications_dismiss.sh handles project names with hyphens" {
     input='{"cwd": "/path/to/my-awesome-project"}'
 
     run bash -c "echo '$input' | '$SCRIPT'"
@@ -67,7 +67,7 @@ teardown() {
     grep -q "\-remove my-awesome-project" "$MOCK_DIR/notifier_calls.log"
 }
 
-@test "dismiss.sh handles project names with underscores" {
+@test "notifications_dismiss.sh handles project names with underscores" {
     input='{"cwd": "/path/to/my_project_name"}'
 
     run bash -c "echo '$input' | '$SCRIPT'"
@@ -76,7 +76,7 @@ teardown() {
     grep -q "\-remove my_project_name" "$MOCK_DIR/notifier_calls.log"
 }
 
-@test "dismiss.sh exits with status 0" {
+@test "notifications_dismiss.sh exits with status 0" {
     input='{"cwd": "/test/project"}'
 
     run bash -c "echo '$input' | '$SCRIPT'"
@@ -84,7 +84,7 @@ teardown() {
     [ "$status" -eq 0 ]
 }
 
-@test "dismiss.sh handles deeply nested paths" {
+@test "notifications_dismiss.sh handles deeply nested paths" {
     input='{"cwd": "/Users/nick/code/work/client/project-name"}'
 
     run bash -c "echo '$input' | '$SCRIPT'"
@@ -93,7 +93,7 @@ teardown() {
     grep -q "\-remove project-name" "$MOCK_DIR/notifier_calls.log"
 }
 
-@test "dismiss.sh suppresses terminal-notifier errors" {
+@test "notifications_dismiss.sh suppresses terminal-notifier errors" {
     # Replace mock with one that writes to stderr
     cat > "$MOCK_DIR/terminal-notifier" << 'EOF'
 #!/bin/bash

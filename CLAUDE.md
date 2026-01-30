@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This repository contains Claude Code hook scripts for macOS notifications. The scripts in `claude/hooks/` are designed to be installed to `~/.claude/hooks/`.
+This repository contains Claude Code hook scripts for macOS notifications. The scripts in `hooks/` can be referenced directly via absolute paths in `~/.claude/settings.json`.
 
 ## Hook Scripts
 
@@ -15,7 +15,7 @@ Shows macOS notification using `terminal-notifier`:
 - **Message**: Task summary + compact JSON input
 - **Grouping**: Notifications grouped by project name for easy dismissal
 
-### dismiss.sh
+### notifications_dismiss.sh
 Dismisses notifications for the current project group.
 
 ## Hook Configuration
@@ -44,7 +44,7 @@ bats tests/
 **Run a specific test file:**
 ```bash
 bats tests/notify.bats
-bats tests/dismiss.bats
+bats tests/notifications_dismiss.bats
 ```
 
 Tests use mock versions of `terminal-notifier` to verify script behavior without triggering actual notifications.

@@ -13,6 +13,9 @@ input=$(cat)
     echo ""
 } >> /tmp/claude-hook-debug.log
 
+# Append input JSON to date-based file
+echo "$input" | jq . >> "/tmp/claude-hook-$(date +%Y-%m-%d).json"
+
 # Check if this is already a hook-triggered stop (prevent infinite loops)
 stop_hook_active=$(echo "$input" | jq -r '.stop_hook_active // false')
 if [ "$stop_hook_active" = "true" ]; then
@@ -36,13 +39,21 @@ fi
 # Get transcript path to extract what was done
 transcript_path=$(echo "$input" | jq -r '.transcript_path // ""')
 
-# Try to get a summary of what was done from the last assistant message
-summary="Task completed"
-if [ -n "$transcript_path" ] && [ -f "$transcript_path" ]; then
-    # Get the last assistant message (look for the last text content)
-    last_message=$(tail -20 "$transcript_path" | grep -o '"text":"[^"]*"' | tail -1 | sed 's/"text":"//;s/"$//' | head -c 100)
-    if [ -n "$last_message" ]; then
-        summary="$last_message"
+# Check if this is an AskUserQuestion tool use - extract the question
+tool_name=$(echo "$input" | jq -r '.tool_name // ""')
+if [ "$tool_name" = "AskUserQuestion" ]; then
+    # Extract the first question from the questions array
+    question=$(echo "$input" | jq -r '.tool_input.questions[0].question // "Question from Claude"')
+    summary="$question"
+else
+    # Try to get a summary of what was done from the last assistant message
+    summary="Task completed"
+    if [ -n "$transcript_path" ] && [ -f "$transcript_path" ]; then
+        # Get the last assistant message (look for the last text content)
+        last_message=$(tail -20 "$transcript_path" | grep -o '"text":"[^"]*"' | tail -1 | sed 's/"text":"//;s/"$//' | head -c 100)
+        if [ -n "$last_message" ]; then
+            summary="$last_message"
+        fi
     fi
 fi
 
