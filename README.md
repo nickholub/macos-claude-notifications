@@ -42,7 +42,7 @@ macOS notification hooks for [Claude Code](https://claude.ai/code). Get notified
            "hooks": [
              {
                "type": "command",
-               "command": "/path/to/macos-claude-notifications/hooks/notify.sh --log-json",
+               "command": "/path/to/macos-claude-notifications/hooks/notify.sh",
                "async": true
              }
            ]
@@ -53,7 +53,7 @@ macOS notification hooks for [Claude Code](https://claude.ai/code). Get notified
            "hooks": [
              {
                "type": "command",
-               "command": "/path/to/macos-claude-notifications/hooks/notify.sh --log-json",
+               "command": "/path/to/macos-claude-notifications/hooks/notify.sh",
                "async": true
              }
            ]
@@ -65,7 +65,7 @@ macOS notification hooks for [Claude Code](https://claude.ai/code). Get notified
            "hooks": [
              {
                "type": "command",
-               "command": "/path/to/macos-claude-notifications/hooks/notify.sh --log-json",
+               "command": "/path/to/macos-claude-notifications/hooks/notify.sh",
                "async": true
              }
            ]
