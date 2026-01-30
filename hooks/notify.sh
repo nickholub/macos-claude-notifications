@@ -62,16 +62,6 @@ fi
 
 # Display macOS notification (requires: brew install terminal-notifier)
 # Use project name as group for easy dismissal
-# Add hook_event_name as subtitle if --log-json is enabled
-if [ "$log_json" = true ]; then
-    hook_event_name=$(echo "$input" | jq -r '.hook_event_name // ""')
-    if [ -n "$hook_event_name" ]; then
-        terminal-notifier -title "$project_name" -subtitle "$hook_event_name" -message "$summary" -group "$project_name"
-    else
-        terminal-notifier -title "$project_name" -message "$summary" -group "$project_name"
-    fi
-else
-    terminal-notifier -title "$project_name" -message "$summary" -group "$project_name"
-fi
+terminal-notifier -title "$project_name" -message "$summary" -group "$project_name"
 
 exit 0
