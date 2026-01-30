@@ -1,61 +1,77 @@
-# Claude Code Notification Hooks
+# macOS Claude Notifications
 
 macOS notification hooks for [Claude Code](https://claude.ai/code). Get notified when Claude stops working or needs your input.
 
 ## Features
 
-- Silent macOS notifications via `terminal-notifier`
-- Notifications grouped by project name
+- macOS notifications via [terminal-notifier](https://github.com/julienXX/terminal-notifier)
+- Notifications grouped by project for easy dismissal
 - Auto-dismiss when Claude resumes work
-- Shows hook type, task summary, and JSON input
+- Extracts actual question text from AskUserQuestion prompts
+- Debug logging and JSON history for troubleshooting
 
 ## Requirements
 
 - macOS
 - [terminal-notifier](https://github.com/julienXX/terminal-notifier): `brew install terminal-notifier`
+- [jq](https://jqlang.github.io/jq/): `brew install jq`
 
 ## Installation
 
-1. Copy hook scripts to Claude's hooks directory:
+1. Clone the repository:
    ```bash
-   mkdir -p ~/.claude/hooks
-   cp claude/hooks/*.sh ~/.claude/hooks/
-   chmod +x ~/.claude/hooks/*.sh
+   git clone https://github.com/nickholub/macos-claude-notifications.git
    ```
 
-2. Configure hooks in `~/.claude/settings.json`:
+2. Configure hooks in `~/.claude/settings.json` using absolute paths to the repo:
    ```json
    {
      "hooks": {
        "PreToolUse": [
          {
            "matcher": "",
-           "hooks": ["~/.claude/hooks/dismiss.sh"]
+           "hooks": ["/path/to/macos-claude-notifications/hooks/notifications_dismiss.sh"]
          }
        ],
        "Stop": [
          {
            "matcher": "",
-           "hooks": ["~/.claude/hooks/notify.sh"]
+           "hooks": ["/path/to/macos-claude-notifications/hooks/notify.sh"]
          }
        ],
        "PostToolUse": [
          {
            "matcher": "AskUserQuestion",
-           "hooks": ["~/.claude/hooks/notify.sh"]
+           "hooks": ["/path/to/macos-claude-notifications/hooks/notify.sh"]
          }
        ]
      }
    }
    ```
 
+   Replace `/path/to/macos-claude-notifications` with your actual clone location.
+
 ## How It Works
 
-- **When Claude stops**: Shows notification with task summary
-- **When Claude asks a question**: Shows notification prompting for input
-- **When Claude resumes**: Dismisses previous notifications for that project
+### Notification Format
 
-Notifications are grouped by project name, so each project's notifications can be managed independently.
+- **Title**: Project name (from directory)
+- **Subtitle**: Hook type (e.g., `Hook: [Stop]`)
+- **Message**: Task summary or question text, plus compact JSON input
+
+### Hook Behavior
+
+- **Stop hook**: Shows notification with task summary extracted from transcript
+- **AskUserQuestion hook**: Shows notification with the actual question Claude is asking
+- **PreToolUse hook**: Dismisses previous notifications when Claude resumes work
+
+Notifications are grouped by project name, so dismissing one clears all notifications for that project.
+
+## Logging
+
+Both scripts log to `/tmp/claude-hook-debug.log` for troubleshooting.
+
+`notify.sh` also appends each hook's JSON input to `/tmp/claude-hook-YYYY-MM-DD.json` for history.
 
 ## Development
 
@@ -67,7 +83,3 @@ Tests use [bats-core](https://github.com/bats-core/bats-core):
 brew install bats-core
 bats tests/
 ```
-
-### Debug Logging
-
-`notify.sh` logs to `/tmp/claude-hook-debug.log` for troubleshooting.
