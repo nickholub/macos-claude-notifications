@@ -12,7 +12,7 @@ This repository contains Claude Code hook scripts for macOS notifications. The s
 Shows macOS notification using `terminal-notifier`:
 - **Title**: Project name (from `CLAUDE_PROJECT_DIR` or `cwd`)
 - **Subtitle**: Hook type (e.g., `Hook: [Stop]`)
-- **Message**: Task summary + compact JSON input
+- **Message**: Task summary or question text
 - **Grouping**: Notifications grouped by project name for easy dismissal
 
 ### notifications_dismiss.sh

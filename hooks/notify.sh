@@ -13,8 +13,10 @@ input=$(cat)
     echo ""
 } >> /tmp/claude-hook-debug.log
 
-# Append input JSON to date-based file
-echo "$input" | jq . >> "/tmp/claude-hook-$(date +%Y-%m-%d).json"
+# Append input JSON to date-based file if CLAUDE_HOOK_LOG_JSON is set
+if [ -n "$CLAUDE_HOOK_LOG_JSON" ]; then
+    echo "$input" | jq . >> "/tmp/claude-hook-$(date +%Y-%m-%d).json"
+fi
 
 # Check if this is already a hook-triggered stop (prevent infinite loops)
 stop_hook_active=$(echo "$input" | jq -r '.stop_hook_active // false')
@@ -59,10 +61,6 @@ fi
 
 # Display macOS notification (requires: brew install terminal-notifier)
 # Use project name as group for easy dismissal
-# Compact JSON to maximize visible content
-input_compact=$(echo "$input" | jq -c .)
-terminal-notifier -title "$project_name" -subtitle "Hook: [$hook_type]" -message "$summary
-
-$input_compact" -group "$project_name"
+terminal-notifier -title "$project_name" -subtitle "Hook: [$hook_type]" -message "$summary" -group "$project_name"
 
 exit 0
