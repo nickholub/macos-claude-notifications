@@ -8,7 +8,7 @@ macOS notification hooks for [Claude Code](https://claude.ai/code). Get notified
 - Notifications grouped by project for easy dismissal
 - Auto-dismiss when Claude resumes work
 - Extracts actual question text from AskUserQuestion prompts
-- Debug logging (optional JSON history)
+- Optional JSON logging for troubleshooting
 
 ## Requirements
 
@@ -68,8 +68,6 @@ macOS notification hooks for [Claude Code](https://claude.ai/code). Get notified
 Notifications are grouped by project name, so dismissing one clears all notifications for that project.
 
 ## Logging
-
-Both scripts log to `/tmp/claude-hook-debug.log` for troubleshooting.
 
 To enable JSON history logging, set the `CLAUDE_HOOK_LOG_JSON` environment variable:
 ```bash

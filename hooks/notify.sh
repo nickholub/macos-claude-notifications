@@ -3,16 +3,6 @@
 # Read JSON input from stdin
 input=$(cat)
 
-# Debug logging
-{
-    echo "=== $(date) ==="
-    echo "CLAUDE_PROJECT_DIR: ${CLAUDE_PROJECT_DIR:-<unset>}"
-    echo "PWD: $PWD"
-    echo "Input JSON:"
-    echo "$input" | jq .
-    echo ""
-} >> /tmp/claude-hook-debug.log
-
 # Append input JSON to date-based file if CLAUDE_HOOK_LOG_JSON is set
 if [ -n "$CLAUDE_HOOK_LOG_JSON" ]; then
     echo "$input" | jq . >> "/tmp/claude-hook-$(date +%Y-%m-%d).json"

@@ -3,16 +3,6 @@
 # Read JSON input from stdin
 input=$(cat)
 
-# Debug logging
-{
-    echo "=== $(date) ==="
-    echo "CLAUDE_PROJECT_DIR: ${CLAUDE_PROJECT_DIR:-<unset>}"
-    echo "PWD: $PWD"
-    echo "Input JSON:"
-    echo "$input" | jq .
-    echo ""
-} >> /tmp/claude-hook-debug.log
-
 # Get project name - prefer CLAUDE_PROJECT_DIR env var, fallback to cwd from input
 if [ -n "$CLAUDE_PROJECT_DIR" ]; then
     project_name=$(basename "$CLAUDE_PROJECT_DIR")
