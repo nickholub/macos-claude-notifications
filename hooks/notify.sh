@@ -1,10 +1,24 @@
 #!/bin/bash
 
+# Parse optional arguments
+log_json=false
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --log-json)
+            log_json=true
+            shift
+            ;;
+        *)
+            shift
+            ;;
+    esac
+done
+
 # Read JSON input from stdin
 input=$(cat)
 
-# Append input JSON to date-based file if CLAUDE_HOOK_LOG_JSON is set
-if [ -n "$CLAUDE_HOOK_LOG_JSON" ]; then
+# Append input JSON to date-based file if --log-json flag is passed
+if [ "$log_json" = true ]; then
     echo "$input" | jq . >> "/tmp/claude-hook-$(date +%Y-%m-%d).json"
 fi
 

@@ -68,9 +68,9 @@ Notifications are grouped by project name, so dismissing one clears all notifica
 
 ## Logging
 
-To enable JSON history logging, set the `CLAUDE_HOOK_LOG_JSON` environment variable:
-```bash
-export CLAUDE_HOOK_LOG_JSON=1
+To enable JSON history logging, pass the `--log-json` flag to `notify.sh`:
+```
+/path/to/macos-claude-notifications/hooks/notify.sh --log-json
 ```
 This will append each hook's JSON input to `/tmp/claude-hook-YYYY-MM-DD.json`.
 
