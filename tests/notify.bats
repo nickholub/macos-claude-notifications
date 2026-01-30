@@ -89,3 +89,34 @@ teardown() {
     grep -q "\-message" "$MOCK_DIR/notifier_calls.log"
     grep -q "\-group myapp" "$MOCK_DIR/notifier_calls.log"
 }
+
+@test "notify.sh shows hook_event_name as subtitle when --log-json is enabled" {
+    input='{"cwd": "/test/myapp", "hook_event_name": "Stop"}'
+
+    run bash -c "echo '$input' | '$SCRIPT' --log-json"
+
+    [ "$status" -eq 0 ]
+    # Verify subtitle is present
+    grep -q "\-subtitle Stop" "$MOCK_DIR/notifier_calls.log"
+}
+
+@test "notify.sh does not show subtitle when --log-json is not enabled" {
+    input='{"cwd": "/test/myapp", "hook_event_name": "Stop"}'
+
+    run bash -c "echo '$input' | '$SCRIPT'"
+
+    [ "$status" -eq 0 ]
+    # Verify subtitle is NOT present
+    ! grep -q "\-subtitle" "$MOCK_DIR/notifier_calls.log"
+}
+
+@test "notify.sh handles missing hook_event_name with --log-json" {
+    input='{"cwd": "/test/myapp"}'
+
+    run bash -c "echo '$input' | '$SCRIPT' --log-json"
+
+    [ "$status" -eq 0 ]
+    # Verify notification is sent without subtitle
+    grep -q "\-title myapp" "$MOCK_DIR/notifier_calls.log"
+    ! grep -q "\-subtitle" "$MOCK_DIR/notifier_calls.log"
+}
