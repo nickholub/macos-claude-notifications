@@ -52,13 +52,20 @@ else
     # Try to get a summary of what was done from the last assistant message
     summary="Task completed"
     if [ -n "$transcript_path" ] && [ -f "$transcript_path" ]; then
-        # Get the last assistant message (look for the last text content)
-        last_message=$(tail -20 "$transcript_path" | grep -o '"text":"[^"]*"' | tail -1 | sed 's/"text":"//;s/"$//' | head -c 100)
+        # Get the last assistant message text, properly decoded from JSON
+        last_message=$(jq -rs '[.[] | select(.type == "assistant") | .message.content[]? | select(.type == "text") | .text] | last // empty' "$transcript_path" 2>/dev/null | head -c 100)
         if [ -n "$last_message" ]; then
             summary="$last_message"
         fi
     fi
 fi
+
+# Sanitize message for notification display:
+# - Replace newlines with spaces
+# - Remove markdown bold markers (**)
+# - Remove backticks
+# - Collapse multiple spaces
+summary=$(echo "$summary" | tr '\n' ' ' | sed 's/\*\*//g; s/`//g; s/  */ /g; s/^ //; s/ $//')
 
 # Display macOS notification (requires: brew install terminal-notifier)
 # Use project name as group for easy dismissal
