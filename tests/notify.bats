@@ -90,3 +90,35 @@ teardown() {
     grep -q "\-group myapp" "$MOCK_DIR/notifier_calls.log"
 }
 
+@test "notify.sh properly decodes special characters from transcript" {
+    # Create a mock transcript with JSON-escaped special characters
+    TRANSCRIPT="$MOCK_DIR/transcript.jsonl"
+    cat > "$TRANSCRIPT" << 'EOF'
+{"type": "assistant", "message": {"content": [{"type": "text", "text": "Here's a quote: \"hello\" and apostrophe: it's working"}]}}
+EOF
+
+    input='{"cwd": "/test/project", "hook_type": "Stop", "transcript_path": "'"$TRANSCRIPT"'"}'
+
+    run bash -c "echo '$input' | '$SCRIPT'"
+
+    [ "$status" -eq 0 ]
+    # Verify special characters are properly decoded (quotes and apostrophes)
+    grep -q 'Here'"'"'s a quote: "hello" and apostrophe: it'"'"'s working' "$MOCK_DIR/notifier_calls.log"
+}
+
+@test "notify.sh sanitizes markdown formatting and newlines from transcript" {
+    # Create a mock transcript with markdown and newlines
+    TRANSCRIPT="$MOCK_DIR/transcript.jsonl"
+    cat > "$TRANSCRIPT" << 'EOF'
+{"type": "assistant", "message": {"content": [{"type": "text", "text": "Implementation complete.\n\n**Files Modified:**\n- `src/main.ts`"}]}}
+EOF
+
+    input='{"cwd": "/test/project", "hook_type": "Stop", "transcript_path": "'"$TRANSCRIPT"'"}'
+
+    run bash -c "echo '$input' | '$SCRIPT'"
+
+    [ "$status" -eq 0 ]
+    # Verify markdown is stripped and newlines replaced with spaces
+    grep -q "Implementation complete. Files Modified: - src/main.ts" "$MOCK_DIR/notifier_calls.log"
+}
+
