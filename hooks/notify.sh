@@ -71,4 +71,20 @@ summary=$(echo "$summary" | tr '\n' ' ' | sed 's/\*\*//g; s/`//g; s/  */ /g; s/^
 # Use project name as group for easy dismissal
 terminal-notifier -title "$project_name" -message "$summary" -group "$project_name"
 
+# Record notification timestamp for auto-dismiss tracking
+timestamp_file="/tmp/claude-notify-$project_name"
+date +%s > "$timestamp_file"
+
+# Spawn background process to auto-dismiss after 60 seconds of inactivity
+# Use nohup and redirect output to fully detach from parent shell
+(
+    sleep 60
+    # Only dismiss if no newer notification was sent
+    last_notify=$(cat "$timestamp_file" 2>/dev/null || echo 0)
+    current_time=$(date +%s)
+    if [ $((current_time - last_notify)) -ge 60 ]; then
+        terminal-notifier -remove "$project_name" 2>/dev/null
+    fi
+) </dev/null >/dev/null 2>&1 & disown
+
 exit 0
