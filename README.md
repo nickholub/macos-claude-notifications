@@ -16,6 +16,17 @@ macOS notification hooks for [Claude Code](https://claude.ai/code). Get notified
 - [terminal-notifier](https://github.com/julienXX/terminal-notifier): `brew install terminal-notifier`
 - [jq](https://jqlang.github.io/jq/): `brew install jq`
 
+### Persistent Notifications
+
+By default, macOS uses temporary banner notifications that disappear after a few seconds. To keep notifications visible until you dismiss them:
+
+1. Open **System Settings** > **Notifications** > **terminal-notifier**
+2. Set **Alert Style** to **Persistent**
+
+![macOS notification settings](macos-notification-settings.png)
+
+Notifications will auto-dismiss after 60 seconds of inactivity (no new notifications in the same project group).
+
 ## Installation
 
 1. Clone the repository:
