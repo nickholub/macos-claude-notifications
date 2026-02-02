@@ -2,6 +2,8 @@
 
 macOS notification hooks for [Claude Code](https://claude.ai/code). Get notified when Claude stops working or needs your input.
 
+![Notifications screenshot](notifications-screenshot.png)
+
 ## Features
 
 - macOS notifications via [terminal-notifier](https://github.com/julienXX/terminal-notifier)
