@@ -10,31 +10,19 @@ macOS notification hooks for [Claude Code](https://claude.ai/code). Get notified
 - Extracts actual question text from AskUserQuestion prompts
 - Optional JSON logging for troubleshooting
 
-## Requirements
-
-- macOS
-- [terminal-notifier](https://github.com/julienXX/terminal-notifier): `brew install terminal-notifier`
-- [jq](https://jqlang.github.io/jq/): `brew install jq`
-
-### Persistent Notifications
-
-By default, macOS uses temporary banner notifications that disappear after a few seconds. To keep notifications visible until you dismiss them:
-
-1. Open **System Settings** > **Notifications** > **terminal-notifier**
-2. Set **Alert Style** to **Persistent**
-
-![macOS notification settings](macos-notification-settings.png)
-
-Notifications will auto-dismiss after 60 seconds of inactivity (no new notifications in the same project group).
-
 ## Installation
 
-1. Clone the repository:
+1. Install dependencies:
+   ```bash
+   brew install terminal-notifier jq
+   ```
+
+2. Clone the repository:
    ```bash
    git clone https://github.com/nickholub/macos-claude-notifications.git
    ```
 
-2. Configure hooks in `~/.claude/settings.json` using absolute paths to the repo:
+3. Configure hooks in `~/.claude/settings.json` using absolute paths to the repo:
    ```json
    {
      "hooks": {
@@ -87,6 +75,14 @@ Notifications will auto-dismiss after 60 seconds of inactivity (no new notificat
    ```
 
    Replace `/path/to/macos-claude-notifications` with your actual clone location.
+
+4. (Optional) Enable persistent notifications:
+
+   By default, macOS uses temporary banner notifications that disappear after a few seconds. To keep notifications visible until you dismiss them, open **System Settings** > **Notifications** > **terminal-notifier** and set **Alert Style** to **Persistent**.
+
+   ![macOS notification settings](macos-notification-settings.png)
+
+   Notifications will auto-dismiss after 60 seconds of inactivity (no new notifications in the same project group).
 
 ## How It Works
 
