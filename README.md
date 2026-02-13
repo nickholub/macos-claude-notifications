@@ -1,5 +1,10 @@
 # macOS Claude Notifications
 
+![macOS](https://img.shields.io/badge/macOS-blue)
+![Claude Code](https://img.shields.io/badge/Claude_Code-hook-ffab01)
+![Bash](https://img.shields.io/badge/Bash-script-4EAA25)
+![License](https://img.shields.io/badge/license-MIT-green)
+
 macOS notification hooks for [Claude Code](https://claude.ai/code). Get notified when Claude stops working or needs your input.
 
 ![Notifications screenshot](notifications-screenshot.png)
